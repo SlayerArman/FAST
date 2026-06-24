@@ -327,12 +327,114 @@
         }
 
         /*FAQ*/
-        
+        .faq-list{display:flex; flex-direction: column; gap: 10px;}
+        .faq-item
+        {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 10px; overflow: hidden;
+        }
 
+        .faq-q
+        {
+            padding: 16px 20px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 500; font-size: 14px;
+            user-select: none; transition: color 0.2s;
+        }
+
+        .faq-q:hover{color: var(--accent);}
+        .faq-q .chevron{transition: transforn 0.25s; font-size: 12px;}
+        .faq-item.open .faq-q{color: var(--accent);}
+        .faq-item.open .chevron{transform: rotate(180deg);}
+        .faq-a
+        {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s;
+            color: var(--muted); font-size: 14px; padding: 0 20px;
+            line-height:1.7;
+        }
+
+        .faq-item.open .faq-a{max-height: 300px; padding: 0 20px 16px;}
+
+        footer
+        {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            text-align: center; padding: 32px 24px;
+            color: var(--muted); font-size: 13px;
+        }
+
+        footer a{color: var(--accrnt); text-decoration: none;}
+        foother a:hover{text-decoration: underline;}
+
+        .note{font-size: 12px; color: var(--muted); margin-top: 6px;}
+        .slection-divider{border: none; border-top: 1px solid var(--border); margin: 0;}
+
+        @media(max-width: 640px)
+        {
+            nav{padding: 0 16px;}
+            .nav-links a:not(.nav-cta){display: none;}
+            .hero{padding: 56px 16px 48px;}
+            .hero-stats{gap: 24px;}
+            .calc-inner{padding: 40px 16px;}
+            .result-big{font-size: 40px;}
+        }
         </style>
-    
+
     </head>
     <body>
+        
+        <nav>
+            <a class="nav-brand" hrff="#"><span>FAST</span>&nbsp; NUCES</a>
+            <div class-nav-links>
+                <a href="#home" class="active">Home</a>
+                <a href="#nat">NAT Calc</a>
+                <a href="#nu">NU Calc</a>
+                <a href="#merit">Merit</a>
+                <a href="faq">FAQs</a>
+                <a href="https://fastvault.vercel.app/admission" target="_blank" class="nav-cta">Resources</a>
+            </div>
+        </nav>
+
+        <section id="home" vlass="hero">
+            <div class="hero-badge">Admission 2026</div>
+            <h1>FAST NICES<br/><span>Aggregate Calculator</span></h1>
+            <p>Calculate Your Admission Aggregrate & Check Program-Wise Merit in Seconds. Accurate, Fast, NLogin Needed.</p>
+            <div class="hero-stats">
+                <div class="hero-stat"><div class="val">5★</div><div class="lbl">User Rating</div></div>
+                <div class="hero-stat"><div class=val>15K+</div><div class="lbl">Visits</div></div>
+                <div class="hero-stat"><div class=val>3K+</div><div class="lbl"></div></div>
+            </div>
+
+            <div style="max-width: 860px; margin:0 auto;">
+                <div class="card-grid">
+                    <div class="card" style="text-align: left;">
+                        <div clas="card-icon">📐</div>
+                        <h3>NAT Marks Calculator</h3>
+                        <p>Calculate Aggregate Using NAT/SAT Marks, Matric & FSc Percentages for Computing & Engineering.</p>
+                        <a href="#nat" class="card-btn">Calculate →</a>
+                    </div>
+                    <div class="card" sty;e="text-align: left;">
+                        <div class="card-icon">🧮</div>
+                        <h3>NU Test Calculator</h3>
+                        <p>Compare Your NU Test Score with Negative Marking & Derive Your Final Admission Aggregate.</p>
+                        <a href="#nu" class="card-btn">Calculate →</a>
+                    </div>
+                    <div class="card" style="text-align: left;">
+                        <div class="card-icon">🏫</div>
+                        <h3>Campus Merit List</h3>
+                        <p>Browse Last Year's Closing Merit for Every FAST Campus & Program Side-By-Side.</p>
+                        <a href="#merit" class="'card-btn">View Merit →</a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider/">
+
+         /*NAT CALCULATOR*/
+
         
     </body>
 </html>
