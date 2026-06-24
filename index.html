@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>FASY NUCES Aggregate Calculator</title>
+        <title>FAST NUCES Aggregate Calculator</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+grotesk:wght@500;700&display=swap" rel="stylesheet" />
         
@@ -434,7 +434,270 @@
         <hr class="section-divider/">
 
          /*NAT CALCULATOR*/
-
+        <div class="calc-wrapper" id="nat">
+            <div class="calc-inner">
+                <h2 class="section-title">NAT / SAT Aggregate Calculator</h2>
+                <p class="section-sub">Enter Your Test & Academic Scores Below.</p>
+            </div>
         
+            <div class="program-toggle" id="natProgramToggle">
+                <button class="prog-btn active" onclick="setNatProgram('comp')">
+                    <div class="prog-label">Computing / Business</div>
+                    <div class="prog-label">NU/NAT 50% · FSc 40% · Matric 10%</div>
+                    <div class="prog-degrees">CV · EE · CE</div>
+                </button>
+            </div>
+        
+            <div class="fields">
+                <div class="field-group">
+                    <div clas="group-title">Test Score</div>
+                <div>
+                <label for="natMarks">NAT / SAT Marks(Out of 100)</label>
+                <input type="number" id="natMarks" placeholder="e.g. 78" min="0" max="100"/>
+            </div>
+        </div>
+        <div class="field-group">
+            <div class="group-title">Academic Record</div>
+            <div>
+                <label for="natMarric">SSC / O-Level %</label>
+                <input type="number" id="natMatric" placeholder="e.g. 90" min="0" max="100" />
+            </div>
+            <div>
+                <label for="natFsc"HSSC ? A-Level %></label>
+                <input type="number" id="natFsc" palceholder="e.g. 85" min="0" max="100" />
+            </div>
+        </div> 
+        </div>
+        
+        <div class="calc-actions">
+            <button class="btn-primary" oneclick="calcNat()">Calculate Aggregate</button>
+            <button class="btn-secondary" onclick="resetNat()">Reset</button>
+        </div>
+        <div class="error-msg" id="natError">Please Fill in All Fields with Values between 0 & 100.</div>
+        <p class="note">Results may Vary by ±0.05 due to Rounding Differences.</p>
+
+        <div class="result-box" id="natResult">
+            <div class="result-main">
+                <div class="result-big" id="natAgg">-</div>
+                <h4>Your Aggregate</h4>
+                <p>Based on Your Program Type & The FAST NUCES Formula</p>
+            </div>
+        </div>
+        <div class="result-breakdown">
+            <div class="breakdown-item"><div class="bval" id="natWTest">-</div><div class="blbl">Weighted Test</div></div>
+            <div class="break-item"><div class="bval" id="natWFsc">-</div><div class="blbl">Weighted FSc</div></div>
+            <div class="breakdown-item"><div class="bval" id="natMatric">-</div><div class="blbl">Weighted Matric</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="section-divider" />
+
+/*NU Test Calculator*/
+<div id="nu" style="background:var(--bg);">
+    <div class="calc-inner" style="max-width: 880px; margin: 0 auto; padding: 60px 24px;">
+    <div class="calc-header">
+        <h2 class="section-title">NU Test Marks Calculator</h2>
+        <p class="section-sub">Calculate Your NU Score with Negative Marking, Then Get the Final Aggregate.</p>
+    </div>
+
+    <div class="tab-bar" id="nuTabBar">
+        <button class="tab active" onclick="setNuProgram('comp')">Computing</button>
+        <button class="tab" onclick="setNuProgram('eng')">Engineering</button>
+        <button class="tab" onclick="setNuProgram('biz')">Business</button>
+    </div>
+
+    <div class="fields" id="nuCompFields">
+        <div class="field-group">
+            <div class="group-title">Advanced Math</div>
+            <div><label>Attempted</label><input type="number" id="amAttempted" placeholder="0-30" min="0" max="30" /></div>
+            <div><label>Correct</label><input type="number" id="amCorrect" placeholder="0-30" min="0" max="30" /></div>
+        </div>
+        <div class="field-group">
+            <div class="group-title">Basic Math</div>
+            <div><label>Attempted</label><input type="number" id="bmAttempted" placeholder="0-20" min="0" max="20" /></div>
+            <div><label>Correcr</label><input type="number" id="bmCorrect" placeholder="0-20" min="0" max="20" /></div>
+        </div>
+         <div class="field-group">
+            <div class="group-title">IQ</div>
+            <div><label>Attempted</label><input type="number" id="iqAttempted" placeholder="0-20" min="0" max="20" /></div>
+            <div><label>Correcr</label><input type="number" id="iqCorrect" placeholder="0-20" min="0" max="20" /></div>
+        </div>
+         <div class="field-group">
+            <div class="group-title">English</div>
+            <div><label>Attempted</label><input type="number" id="enAttempted" placeholder="0-20" min="0" max="20" /></div>
+            <div><label>Correcr</label><input type="number" id="enCorrect" placeholder="0-20" min="0" max="20" /></div>
+        </div>
+    </div>
+
+    /*Engineering Fields*/
+    <div class="fieds" id="nuEngFields" style="display:none">
+        <div class="field-group">
+            <div class="group-title">Basic Math</div>
+            <div><label>Attemted</label><input type="number" id="ebmAttemted" placeholder="0-20" min="0" max="20" /></div>
+            <div><label>Correct</label><input type="number" id="ebmCorrect" placeholder="0-20" min="0" max="20" /></div>
+        </div>
+        <div class="field-group">
+            <div class="group-title">IQ</div>
+            <div><label>Attemted</label><input type="number" id="eiqAttemted" placeholder="0-20" min="0" max="20" /></div>
+            <div><label>Correct</label><input type="number" id="eiqCorrect" placeholder="0-20" min="0" max="20" /></div>
+        </div>
+        <div class="field-group">
+            <div class="group-title">English</div>
+            <div><label>Attemted</label><input type="number" id="eenAttemted" placeholder="0-30" min="0" max="30" /></div>
+            <div><label>Correct</label><input type="number" id="eenCorrect" placeholder="0-30" min="0" max="30" /></div>
+        </div>
+    </div>
+
+    /*Business fields*/
+    <div class="fields" id="nuBizFields" style="display:none;">
+        <div class="group-title">Basic Math</div>
+            <div><label>Attemted</label><input type="number" id="bbmAttemted" placeholder="0-20" min="0" max="20" /></div>
+            <div><label>Correct</label><input type="number" id="bbmCorrect" placeholder="0-20" min="0" max="20" /></div>
+    </div>
+    <div class="group-title">IQ</div>
+            <div><label>Attemted</label><input type="number" id="biqAttemted" placeholder="0-20" min="0" max="20" /></div>
+            <div><label>Correct</label><input type="number" id="biqCorrect" placeholder="0-20" min="0" max="20" /></div>
+     </div>
+     <div class="group-title">Englis</div>
+            <div><label>Attemted</label><input type="number" id="benAttemted" placeholder="0-30" min="0" max="30" /></div>
+            <div><label>Correct</label><input type="number" id="benCorrect" placeholder="0-30" min="0" max="30" /></div>
+     </div>
+     <div class="field-group">
+        <div class="group-title">Essay</div>
+        <div><label>Expected Marks(Out of 20)</label><input type="number" id="essayMarks" placeholder="0-20" min="0" max="20" /></div>
+     </div>
+</div>
+
+<div class="fields" style="margin-top:0">
+    <div class="field-group">
+        <div class="group-title">Academic Record</div>
+        <div><label for="nuMatric">SSC / O-Level %</label><input type="number" id="nuMatric" placeholder="e.g. 90" min="0" max="100" /></div>
+        <div><label for="nuFsc">HSSC / A-Level %</label><input type="number" id="nuFsc" placeholder="e.g. 85" min="0" max="100" /></div>
+    </div>
+</div>
+    
+<div class="error-msg" id="nuError">Please Fill in All Fields Correctly.</div>
+<p class="note">Results may VAry by ±0.05 due to Rounding Differences.</p>
+
+<div class="result-box" id="nuResult">
+    <div class="result-main">
+        <div class="result-big" id="nuAgg">-</div>
+        <div class="result-meta">
+            <h4>Final Aggregate</h4>
+            <p>Your NU Test Score & Academin Record Combined</p>
+        </div>
+    </div>
+    <div class="result-breakdown">
+        <div class="breakdown-item"><div class="bval" id="nuTestScore">-</div><div class="blbl">Nu Test Score</div></div>
+        <div class="breakdown-item"><div class="bval" id="nuNegMark">-</div><div class="blbl">Negative Marks</div></div>
+        <div class="breakdown-item"><div class="bval" id="nuWTest">-</div><div class="blbl">Weighted Test</div></div>
+        <div class="breakdown-item"><div class="bval" id="nuWFsc">-</div><div class="blbl">Weighted FSc</div></div>
+        <div class="breakdown-item"><div class="bval" id="nuWMatric">-</div><div class="blbl">Weighted Matric</div></div>
+    </div>
+</div>
+</div>
+</div>
+
+<hr class="section-divider" />
+
+/*Merit Table*/
+<div id="merit" style="background:var(--surface); border-top: 1px solid var(--border);">
+    <div class="merit-section">
+        <h2 class="section-title">Closing Merit List 2026</h2>
+        <p class="section-sub">Previous Closing Aggregate Accross FAST Campuses. A Dash (-) Means No Data Reported.</p>
+        <div class="year-toggle">
+            <button class="year-btn active" onclick="setYear(2026)">2026</button>
+            <button class="year-btn" onclick="setYear(2025)">2025</button>
+        </div>
+
+        <div class="merit-table-wrap">
+            <table id="meritTable">
+                <thead>
+                    <tr>
+                        <th>Campus</th>
+                        <th>Program</th>
+                        <th>NU Merit</th>
+                        <th>NAT Merit</th>
+                        <th>SAT Merit</th>
+                    </tr>
+                </thead>
+                <tbody id="meritBody"></tbody>
+            </table>
+        </div>
+        <p class="note" style="margin-top:12px;">Data Based on Reported Responses - May Not be 100% Accurate.<a href="https://slayerarman.github.io/FAST/" target="_blank" style="color:var(--accent)">Source</a>.</p>
+    </div>
+</div>
+
+<hr class="section-divider" />
+
+/*FAQs*/
+<div id="faq" style="background:var(--bg);">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-sub">Common Questions about FAST NUCES Admissions - Last Updated June 2026.</p>
+    <div class="faq-list" id="faqList"></div>
+    </div> 
+</div>
+
+<footer>
+    <p> Made with ❤️ by <a href="https://www.youtube.com/@slayerarman" target="_black">Arman Ahmad</a> &nbsp;·&nbsp; <a href="https://github.com/SlayerArman" target="_blank">GitHub</a> &nbsp;·&nbsp; <a href="https://www.instagram.com/slayerarman67/" target="_blank">Instagram</a></p>
+</footer>
+
+<script>
+    let natProgram = 'comp';
+    let nuProgram = 'comp';
+
+    function setNatProgram(p)
+    {
+        natProgram = p;
+        document.querySelectorAll('#natProgramToggle .prog-btn').forEach((b, i) => {
+            b.classList.toggle('active', (p === 'comp' && i === 0) || (p === 'eng' && i === 1));
+        });
+        resetNat();
+    }
+
+    function calcNat()
+    {
+        const marks = pareFloat(document.getElementById('natMarks').value);
+        const matric = parseFloat(document.getElementById('natMatric').value);
+        const fsc = parseFloat(document.getElementById('natFsc').value);
+        const err = document.getElementById('natError');
+
+        if (isNaN(marks) || isNaN(matric) ||  isNaN(fsc) || marks < 0 || marks > 100 || matric < 0 || matric > 100 || fsc < 0 || fsc > 100) {
+            err.style.display = 'block'; return;
+        }
+        err.style.display = 'none';
+
+        let wTest, wFsc, wMatric;
+        if(natProgram === 'comp')
+        {
+            wTest = marks * 0.50;
+            wFsc = fsc * 0.40;
+            wMatric = matric * 0.10;
+        } else {
+            wTest = marks * 0.33;
+            wFsc = fsc * 0.50;
+            wMatric = matric * 0.17;
+        }
+        const agg = wTest + wFsc + wMatric;
+
+        document.getElementById('natAgg').textContent = agg.toFixed(2);
+        document.getElementById('natWTest').textContent = wTest.toFixed(2);
+        document.getElementById('natWFsc').textContent = wFsc.toFixed(2);
+        document.getElementById('natWMatric').textContent = wMatric.toFixed(2);
+        document.getElementById('natResult').classList.add('show');
+    }
+
+    function resetNat()
+    {
+        ['natMarks', 'natMatric', 'natFsc'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('natResult').classList.remove('show');
+        document.getElementById('natError').style.display = 'none';
+    }
+
+    /*NU Calc*/
+    
+</script>
     </body>
 </html>
