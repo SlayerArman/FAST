@@ -530,8 +530,8 @@
     <div class="fields" id="nuEngFields" style="display:none;">
         <div class="field-group">
         <div class="group-title">Advanced Math</div>
-        <div><label>Attempted</label><input type="number" id="amAttempted" placeholder="0–50" min="0" max="50" /></div>
-        <div><label>Correct</label><input type="number" id="amCorrect" placeholder="0–50" min="0" max="50" /></div>
+        <div><label>Attempted</label><input type="number" id="eamAttempted" placeholder="0–50" min="0" max="50" /></div>
+        <div><label>Correct</label><input type="number" id="eamCorrect" placeholder="0–50" min="0" max="50" /></div>
       </div>
       <div class="field-group">
         <div class="group-title">Basic Math</div>
@@ -731,7 +731,7 @@ function calcNu()
   if (nuProgram === 'comp')
   {
     const fields = [
-      {a: getVal('amAttempted'), c: getVal('amCorrect'), total: 30},
+      {a: getVal('amAttempted'), c: getVal('amCorrect'), total: 50},
       {a: getVal('bmAttempted'), c: getVal('bmCorrect'), total: 20},
       {a: getVal('iqAttempted'), c: getVal('iqCorrect'), total: 20},
       {a: getVal('enAttempted'), c: getVal('enCorrect'), total: 30},
@@ -748,6 +748,7 @@ function calcNu()
   } else if(nuProgram === 'eng')
   {
     const fields = [
+      {a: getVal('eamAttempted'), c: getVal('eamCorrect'), total: 50},
       {a: getVal('ebmAttempted'), c: getVal('ebmCorrect'), total: 20},
       {a: getVal('eiqAttempted'), c: getVal('eiqCorrect'), total: 20},
       {a: getVal('eenAttempted'), c: getVal('eenCorrect'), total: 30},
@@ -763,12 +764,12 @@ function calcNu()
 
   } else {
     const fields = [
-      {a: getVal('bbmAttempted'), c: getVal('bbmCorrect'), total: 20},
-      {a: getVal('biqAttempted'), c: getVal('biqCorrect'), total: 20},
-      {a: getVal('benAttempted'), c: getVal('benCorrect'), total: 30},
+      {a: getVal('bbmAttempted'), c: getVal('bbmCorrect'), total: 50},
+      {a: getVal('biqAttempted'), c: getVal('biqCorrect'), total: 25},
+      {a: getVal('benAttempted'), c: getVal('benCorrect'), total: 10},
     ];
     const essay = getVal('essayMarks');
-    if(fields.some(f => isNaN(f.a) || isNaN(f.c) || f.c > f.a || f.a > f.total || f.a < 0) || isNaN(essay) || essay < 0 || essay > 20){
+    if(fields.some(f => isNaN(f.a) || isNaN(f.c) || f.c > f.a || f.a > f.total || f.a < 0) || isNaN(essay) || essay < 0 || essay > 15){
       err.style.display = 'block'; return;
     }
     fields.forEach(f => {
@@ -804,7 +805,7 @@ function calcNu()
 function resetNu()
 {
   ['amAttempted','amCorrect','bmAttempted','bmCorrect','iqAttempted','iqCorrect','enAttempted','enCorrect',
-   'ebmAttempted','ebmCorrect','eiqAttempted','eiqCorrect','eenAttempted','eenCorrect',
+    'eamAttempted','eamCorrect', 'ebmAttempted','ebmCorrect','eiqAttempted','eiqCorrect','eenAttempted','eenCorrect',
    'bbmAttempted','bbmCorrect','biqAttempted','biqCorrect','benAttempted','benCorrect','essayMarks',
    'nuMatric','nuFsc'].forEach(id => {
     const el = document.getElementById(id);
