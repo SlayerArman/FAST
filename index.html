@@ -1,703 +1,906 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>FAST NUCES Aggregate Calculator</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+grotesk:wght@500;700&display=swap" rel="stylesheet" />
-        
-        <style>
-            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-            :root
-            {
-                --bg: #0d1117;
-                --surface: #161b22;
-                --card: #1c2230;
-                --border: #2a3347;
-                --accent: #00c9a7;
-                --accent2: #0ea5e9;
-                --danger: #f87171;
-                --text: #e2e8f0;
-                --muted: #8b9ab0;
-                --radius: 12px;
-                --glow: 0 0 20px rgba(0, 201, 167, .18);
-            }  
-
-            html{scroll-behavior: smooth;}
-
-            body
-            {
-                background: var(--bg);
-                color: var(--text);
-                font-family: 'Inter', sans-serif;
-                font-size: 15px;
-                line-height: 1.6;
-                min-height: 100vh;
-            }
-
-            nav
-            {
-                position: sticky; top: 0; z-index: 100;
-                background: rgba(13, 17, 23, 0.88);
-                backdrop-filter: blur(14px);
-                border-bottom: 1px solid var(--border);
-                display: flex; align-items: center; justify-content: space-between;
-                padding: 0 32px; height: 62px;
-            }
-
-            .nav-brand
-            {
-                display: flex; align-items: center; gap: 10px;
-                font-family: 'Space grotesk', sans-serif;
-                font-size: 17px; font-weight: 700;
-                color: var(--text); text-decoration: none;
-            }
-
-            .nav-brand span{color: var(--accent);}
-            .nav-links{display: flex; gap: 6px;}
-            .nav-links a
-        {
-            color: var(--muted); font-size: 14px; font-weight: 500;
-            text-decoration: none; padding: 6px 14px;
-            border-radius: 8px; transition: all .2s;
-        }
-
-        .nav-cta
-        {
-            background: var(--accent); color: #0d1117 !important;
-            border-radius: 8px !important; font-weight: 600 !important;
-            transition: opacity .2s !important;
-        }
-
-        .nav-cta:hover{opacity: 0.85; background: var(--accent) !important;}
-
-        .hero-badge
-        {
-            display: inline-block;
-            background: rgba(0, 201, 167, 0.1);
-            border: 1px solid rgba(0, 201, 167, 0.3);
-            color: var(--accent);
-            font-size: 12px; font-weight: 600;
-            padding: 4px 10px; border-radius: 50px;
-            letter-spacing: 0.04em; text-transform: uppercase;
-            margin-bottom: 22px;
-        }
-
-        .hero h1
-        {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(30px, 5vw, 52px);
-            font-weight: 700; line-height: 1.15;
-        }
-
-        .hero h1 span{color: var(--accent);}
-        .hero p
-        {
-            color: var(--muted); font-size: 16px;
-            max-width: 20px; margin: 0 auto 36px;
-        }
-
-        .hero-stats
-        {
-            display: flex; justify-content: center; gap: 40px;
-            flex-wrap: wrap; margin-bottom: 40px;
-        }
-
-        .hero-stat{text-align: center;}
-        .hero-stat .val 
-        {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 26px; font-weight: 700; color: var(--accent);
-        }
-
-        .hero-stat .lbl{font-size: 12px; color: var(--muted);}
-
-        .selection{padding: 60px 24px; max-width: 1060px; margin: 0 auto;}
-        .selection-title
-        {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px; font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .selection-sub{color: var(--muted); font-size: 14px; margin-bottom: 32px;}
-
-        .card-grid{display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:18px;}
-        
-        .card
-        {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px 28px;
-            transition: border-color 0.25s, box-shadow 0.25s;
-        }
-
-        .card h3{font-size: 16px; font-weight: 600; margin-bottom: 6px;}
-        
-        .card p{color: var(--muted); font-size: 13px; margin-bottom: 18px; line-height: 1.5;}
-
-        .card-btn
-        {
-            display: inline-block; font-size: 13px; font-weight: 600;
-            color: var(--accent); text-decoration: none;
-            border: 1px solid var(--accent); border-radius: 8px;
-            padding: 7px 18px; cursor: pointer;
-            background: transparent; transition: all 0.2s;
-        }
-
-        .card-btn:hover{background: rgba(0, 201, 167, 0.12);}
-
-        .calc-wrapper
-        {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .calc-inner{max-width: 880px; margin: 0 auto; padding: 60px 24px;}
-        .calc-header{margin-bottom: 32px;}
-
-        .tab-bar{display: flex; gap: 4px; margin-bottom: 28px;}
-        
-        .tab
-        {
-            padding: 9px 22px; font-size: 14px; font-weight: 600;
-            border: 1px solid var(--border); border-radius: 8px;
-            background: transparent; color: var(--muted);
-            cursor: pointer; transition: all 0.2s;
-        }
-
-        .tab.active
-        {
-            background: var(--accent); color: #0d1117;
-            border-color: var(--accent);
-        }
-
-        .tab:hover:not(.active){border-color: var(--accent); color: var(--text);}
-
-        .program-toggle
-        {
-            display: grid; grid-template-columns: 1fr 1fr;
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 10px; overflow: hidden; margin-bottom: 28px;
-        }
-
-        .prog-btn
-        {
-            padding: 14px 20px; cursor: pointer;
-            background: transparent; border: none; color: var(--muted);
-            font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif;
-            text-align: left; transition: all 0.2s;
-        }
-
-        .prog-btn.active
-        {
-            background: rgba(0, 201, 167, 0.1); color: var(--accent); border-right: none;
-        }
-
-        .prog-label{font-size: 12px; font-weight: 600; margin-bottom: 2px;}
-
-        .prog-formula{font-size: 11px; color: var(--muted);}
-
-        .prog-btn.active .prog-fromula{color: rgba(0, 201, 167, 0.7);}
-
-        .prog-degrees{font-size: 11px; color: var(--muted); margin-top: 4px}
-
-        .prog-btn.active .progn-degrees{color: rgba(0, 201, 167, 0.6);}
-
-        /*fields*/
-        .fields {display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom:28px;} 
-        .fields-group { display:flex; flex-direction: column; gap: 14px  }
-        .group-title {font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px;}
-        label { font-size: 13px; font-weight: 500; margin-bottom: 5px; color: var(--text); display: block;}
-        input[type="number"]
-        {
-            width: 100%; background: var(--card); border: 1px solid var(--border);
-            border-radius: 8px; color: var(--text); font-size: 15px;
-            padding: 11px 14px; outline: none; font-family: 'Inter', sans-serif;
-            transition: border-color 0.2s;
-            appearance: textfield;
-            -moz-appearance: textfield;
-        }
-
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button{-webkit-appearance: none;}
-        input[type="number"]::focus{border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.15);}
-        input[type="number"].error{border-color: var(--danger);}
-
-        .calc-actions{display:flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;}
-
-        .btn-primary
-        {
-            background: transparent; color: var(--muted);
-            border: 1px solid var(--border); border-radius: 9px; padding: 12px 24px;
-            font-size: 15px; font-weight: 500; cursor: pointer;
-            font-family: 'Inter', sans-serif; transition: all 0.2s;
-        }
-        .btn-primary:hover{opacity: 0.85;}
-        .btn-secondary
-        {
-            background: transparent; color: var(--muted);
-            border: 1px solid var(--border); border-radius: 9px; padding: 12px 24px;
-            font-size: 15px; font-weight: 500; cursor: pointer;
-            font-family: 'Inter' sans-serif; transition: all 0.2s;
-        }
-
-        /*result box*/
-        .result-box
-        {
-            display: none;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px; margin-top: 10px;
-        }
-
-        .result-box.show{display: block; animation: fadeIn 0.35s rease;}
-        @keyframes fadeIn{from{opacity: 0; transform: translateY(8px);} to{opacity:1 ; transform: translateY(0);}}
-
-        .result-main
-        {
-            display: flex; align-items: center; gap: 24px;
-            flex-wrap: wrap; margin-bottom: 20px;
-        }
-
-        .result-big
-        {
-            font-family: 'Space Grotest', sans-serif;
-            font-size: 52px; font-weight: 700;
-            line-height:1; color: var(--accent);
-        }
-
-        .result-meta{flex: 1;}
-        .result-meta h4{font-size: 16px; font-weight: 600; margin-bottom: 4px;}
-        .result-meta p{font-size: 13px; color: var(--muted);}
-
-        .reslut-breakdown
-        {
-            display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap:12px; border-top: 1px solid var(--border); padding-top: 20px;
-        }
-
-        .breakdow-item{text-align: center;}
-        .breakdown-item .bval{font-size: 20px; font-weight: 700; color: var(--accent2);}
-        .breakdown-item .blbl{font-size: 11px; color: var(--muted); margin-top: 2px;}
-
-        .error-msg{color: var(--danger); font-size: 13px; margin-top: 80px; display: none;}
-
-        /*merit table*/
-        .merit-selection{padding: 60px 24px; max-width: 1060px; margin: 0 auto;}
-        .year-toggle{display: flex; gap: 8px; margin-bottom: 24px;}
-        .year-btn
-        {
-            padding: 7px 20px; border: 1px solid var(--border);
-            border-radius: 8px; background: transparent; color: var(--muted);
-            font-size: 13px; font-weight: 600; cursor: pointer;
-            font-family: 'Inter', sans-serif; transition: all 0.2s;
-        }
-
-        .year-btn.active{background: var(--accent); color: #0d1117; border-color: var(--accent);}
-
-        .merit-table-wrap{overflow-x: auto;}
-        table{width: 100%; border-collapse: collapse; font-size: 13px;}
-
-        th
-        {
-            background:var(--card); color: var(--muted);
-            font-weight: 600; font-size: 11px; letter-spacing: 0.05em;
-            text-transform: upercase; padding: 12px 16px; text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        td
-        {
-            padding: 13px 16px; border-bottom: 1px solid rgba(42 ,51, 71, 0.5);
-            color: var(--text);
-        }
-
-        tr:hover td{background: rgba(255, 255, 255, 0.02);}
-        
-        .badge
-        {
-            display: inline-block; font-size: 11px; font-weight: 600;
-            padding: 2px 9px; border-radius: 5px;
-            background: rgba(0, 201, 167, 0.12); color: var(--accent);
-        }
-
-        /*FAQ*/
-        .faq-list{display:flex; flex-direction: column; gap: 10px;}
-        .faq-item
-        {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 10px; overflow: hidden;
-        }
-
-        .faq-q
-        {
-            padding: 16px 20px; cursor: pointer;
-            display: flex; justify-content: space-between; align-items: center;
-            font-weight: 500; font-size: 14px;
-            user-select: none; transition: color 0.2s;
-        }
-
-        .faq-q:hover{color: var(--accent);}
-        .faq-q .chevron{transition: transforn 0.25s; font-size: 12px;}
-        .faq-item.open .faq-q{color: var(--accent);}
-        .faq-item.open .chevron{transform: rotate(180deg);}
-        .faq-a
-        {
-            max-height: 0; overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s;
-            color: var(--muted); font-size: 14px; padding: 0 20px;
-            line-height:1.7;
-        }
-
-        .faq-item.open .faq-a{max-height: 300px; padding: 0 20px 16px;}
-
-        footer
-        {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            text-align: center; padding: 32px 24px;
-            color: var(--muted); font-size: 13px;
-        }
-
-        footer a{color: var(--accrnt); text-decoration: none;}
-        foother a:hover{text-decoration: underline;}
-
-        .note{font-size: 12px; color: var(--muted); margin-top: 6px;}
-        .slection-divider{border: none; border-top: 1px solid var(--border); margin: 0;}
-
-        @media(max-width: 640px)
-        {
-            nav{padding: 0 16px;}
-            .nav-links a:not(.nav-cta){display: none;}
-            .hero{padding: 56px 16px 48px;}
-            .hero-stats{gap: 24px;}
-            .calc-inner{padding: 40px 16px;}
-            .result-big{font-size: 40px;}
-        }
-        </style>
-
-    </head>
-    <body>
-        
-        <nav>
-            <a class="nav-brand" hrff="#"><span>FAST</span>&nbsp; NUCES</a>
-            <div class-nav-links>
-                <a href="#home" class="active">Home</a>
-                <a href="#nat">NAT Calc</a>
-                <a href="#nu">NU Calc</a>
-                <a href="#merit">Merit</a>
-                <a href="faq">FAQs</a>
-                <a href="https://fastvault.vercel.app/admission" target="_blank" class="nav-cta">Resources</a>
-            </div>
-        </nav>
-
-        <section id="home" vlass="hero">
-            <div class="hero-badge">Admission 2026</div>
-            <h1>FAST NUCES<br/><span>Aggregate Calculator</span></h1>
-            <p>Calculate Your Admission Aggregrate & Check Program-Wise Merit in Seconds. Accurate, Fast, No Login Needed.</p>
-            <div class="hero-stats">
-                <div class="hero-stat"><div class="val">5★</div><div class="lbl">User Rating</div></div>
-                <div class="hero-stat"><div class=val>15K+</div><div class="lbl">Visits</div></div>
-                <div class="hero-stat"><div class=val>3K+</div><div class="lbl"></div></div>
-            </div>
-
-            <div style="max-width: 860px; margin:0 auto;">
-                <div class="card-grid">
-                    <div class="card" style="text-align: left;">
-                        <div clas="card-icon">📐</div>
-                        <h3>NAT Marks Calculator</h3>
-                        <p>Calculate Aggregate Using NAT/SAT Marks, Matric & FSc Percentages for Computing & Engineering.</p>
-                        <a href="#nat" class="card-btn">Calculate →</a>
-                    </div>
-                    <div class="card" sty;e="text-align: left;">
-                        <div class="card-icon">🧮</div>
-                        <h3>NU Test Calculator</h3>
-                        <p>Compare Your NU Test Score with Negative Marking & Derive Your Final Admission Aggregate.</p>
-                        <a href="#nu" class="card-btn">Calculate →</a>
-                    </div>
-                    <div class="card" style="text-align: left;">
-                        <div class="card-icon">🏫</div>
-                        <h3>Campus Merit List</h3>
-                        <p>Browse Last Year's Closing Merit for Every FAST Campus & Program Side-By-Side.</p>
-                        <a href="#merit" class="'card-btn">View Merit →</a>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <hr class="section-divider/">
-
-         /*NAT CALCULATOR*/
-        <div class="calc-wrapper" id="nat">
-            <div class="calc-inner">
-                <h2 class="section-title">NAT / SAT Aggregate Calculator</h2>
-                <p class="section-sub">Enter Your Test & Academic Scores Below.</p>
-            </div>
-        
-            <div class="program-toggle" id="natProgramToggle">
-                <button class="prog-btn active" onclick="setNatProgram('comp')">
-                    <div class="prog-label">Computing / Business</div>
-                    <div class="prog-label">NU/NAT 50% · FSc 40% · Matric 10%</div>
-                    <div class="prog-degrees">CV · EE · CE</div>
-                </button>
-            </div>
-        
-            <div class="fields">
-                <div class="field-group">
-                    <div clas="group-title">Test Score</div>
-                <div>
-                <label for="natMarks">NAT / SAT Marks(Out of 100)</label>
-                <input type="number" id="natMarks" placeholder="e.g. 78" min="0" max="100"/>
-            </div>
-        </div>
-        <div class="field-group">
-            <div class="group-title">Academic Record</div>
-            <div>
-                <label for="natMarric">SSC / O-Level %</label>
-                <input type="number" id="natMatric" placeholder="e.g. 90" min="0" max="100" />
-            </div>
-            <div>
-                <label for="natFsc"HSSC ? A-Level %></label>
-                <input type="number" id="natFsc" palceholder="e.g. 85" min="0" max="100" />
-            </div>
-        </div> 
-        </div>
-        
-        <div class="calc-actions">
-            <button class="btn-primary" oneclick="calcNat()">Calculate Aggregate</button>
-            <button class="btn-secondary" onclick="resetNat()">Reset</button>
-        </div>
-        <div class="error-msg" id="natError">Please Fill in All Fields with Values between 0 & 100.</div>
-        <p class="note">Results may Vary by ±0.05 due to Rounding Differences.</p>
-
-        <div class="result-box" id="natResult">
-            <div class="result-main">
-                <div class="result-big" id="natAgg">-</div>
-                <h4>Your Aggregate</h4>
-                <p>Based on Your Program Type & The FAST NUCES Formula</p>
-            </div>
-        </div>
-        <div class="result-breakdown">
-            <div class="breakdown-item"><div class="bval" id="natWTest">-</div><div class="blbl">Weighted Test</div></div>
-            <div class="break-item"><div class="bval" id="natWFsc">-</div><div class="blbl">Weighted FSc</div></div>
-            <div class="breakdown-item"><div class="bval" id="natMatric">-</div><div class="blbl">Weighted Matric</div></div>
-            </div>
-        </div>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FAST NUCES Merit Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+
+<style>
+  *, *::before, *::after{box-sizing: border-box; margin: 0; padding: 0;}
+
+  :root {
+    --bg:        #0d1117;
+    --surface:   #161b22;
+    --card:      #1c2230;
+    --border:    #2a3347;
+    --accent:    #00c9a7;
+    --accent2:   #0ea5e9;
+    --danger:    #f87171;
+    --text:      #e2e8f0;
+    --muted:     #8b9ab0;
+    --radius:    12px;
+    --glow:      0 0 20px rgba(0,201,167,.18);
+  }
+
+  html{scroll-behavior: smooth;}
+
+  body
+  {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  nav
+  {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,17,23,.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 0 32px; height: 62px;
+  }
+
+  .nav-brand
+  {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px; font-weight: 700;
+    color: var(--text); text-decoration: none;
+  }
+
+  .nav-brand span{color: var(--accent);}
+  .nav-links{display: flex; gap: 6px;}
+  .nav-links a
+  {
+    color: var(--muted); font-size: 14px; font-weight: 500;
+    text-decoration: none; padding: 6px 14px;
+    border-radius: 8px; transition: all .2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active
+  {
+    color: var(--text); background: var(--card);
+  }
+
+  .nav-cta
+  {
+    background: var(--accent); color: #0d1117 !important;
+    border-radius: 8px !important; font-weight: 600 !important;
+    padding: 6px 16px !important; font-size: 13px !important;
+    transition: opacity .2s !important;
+  }
+
+  .nav-cta:hover{opacity: .85; background: var(--accent) !important;}
+
+  .hero
+  {
+    text-align: center;
+    padding: 80px 24px 64px;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,201,167,.13), transparent);
+  }
+
+  .hero-badge
+  {
+    display: inline-block;
+    background: rgba(0,201,167,.1);
+    border: 1px solid rgba(0,201,167,.3);
+    color: var(--accent);
+    font-size: 12px; font-weight: 600;
+    padding: 4px 14px; border-radius: 50px;
+    letter-spacing: .04em; text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  .hero h1
+  {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(30px, 5vw, 52px);
+    font-weight: 700; line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span{color: var(--accent);}
+  
+  .hero p
+  {
+    color: var(--muted); font-size: 16px;
+    max-width: 520px; margin: 0 auto 36px;
+  }
+
+  .hero-stats
+  {
+    display: flex; justify-content: center; gap: 40px;
+    flex-wrap: wrap; margin-bottom: 40px;
+  }
+
+  .hero-stat{text-align: center;}
+  .hero-stat .val
+  {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px; font-weight: 700; color: var(--accent);
+  }
+
+  .hero-stat .lbl{font-size: 12px; color: var(--muted);}
+
+  .section{padding: 60px 24px; max-width: 1060px; margin: 0 auto;}
+  .section-title
+  {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px; font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .section-sub{color: var(--muted); font-size: 14px; margin-bottom: 32px;}
+
+  .card-grid{display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;}
+  .card
+  {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    transition: border-color .25s, box-shadow .25s;
+  }
+  .card:hover{border-color: var(--accent); box-shadow: var(--glow);}
+  .card-icon
+  {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: rgba(0,201,167,.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 16px;
+  }
+
+  .card h3 {font-size: 16px; font-weight: 600; margin-bottom: 6px;}
+  .card p{color: var(--muted); font-size: 13px; margin-bottom: 18px; line-height: 1.5;}
+  .card-btn
+  {
+    display: inline-block; font-size: 13px; font-weight: 600;
+    color: var(--accent); text-decoration: none;
+    border: 1px solid var(--accent); border-radius: 8px;
+    padding: 7px 18px; cursor: pointer;
+    background: transparent; transition: all .2s;
+  }
+  .card-btn:hover{background: rgba(0,201,167,.12);}
+
+  .calc-wrapper
+  {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .calc-inner{max-width: 880px; margin: 0 auto; padding: 60px 24px;}
+  .calc-header{margin-bottom: 32px;}
+
+  .tab-bar{display: flex; gap: 4px; margin-bottom: 28px;}
+  .tab
+  {
+    padding: 9px 22px; font-size: 14px; font-weight: 600;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: transparent; color: var(--muted);
+    cursor: pointer; transition: all .2s;
+  }
+  .tab.active
+  {
+    background: var(--accent); color: #0d1117;
+    border-color: var(--accent);
+  }
+  .tab:hover:not(.active){border-color: var(--accent); color: var(--text);}
+
+  .program-toggle
+  {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; margin-bottom: 28px;
+  }
+  .prog-btn
+  {
+    padding: 14px 20px; cursor: pointer;
+    background: transparent; border: none; color: var(--muted);
+    font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif;
+    text-align: left; transition: all .2s;
+  }
+  .prog-btn.active
+  {background: rgba(0,201,167,.1); color: var(--accent); border-right: none;}
+
+  .prog-label{font-size: 12px; font-weight: 600; margin-bottom: 2px;}
+  .prog-formula{font-size: 11px; color: var(--muted);}
+  .prog-btn.active .prog-formula{color: rgba(0,201,167,.7);}
+  .prog-degrees {font-size: 11px; color: var(--muted); margin-top: 4px;}
+  .prog-btn.active .prog-degrees{color: rgba(0,201,167,.6);}
+
+  .fields{display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 28px;}
+  .field-group{display: flex; flex-direction: column; gap: 14px;}
+  .group-title{font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px;}
+  label{font-size: 13px; font-weight: 500; margin-bottom: 5px; color: var(--text); display: block;}
+  input[type="number"]
+  {
+    width: 100%; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: 15px;
+    padding: 11px 14px; outline: none; font-family: 'Inter', sans-serif;
+    transition: border-color .2s;
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button{-webkit-appearance: none;}
+  input[type="number"]:focus{border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,201,167,.15);}
+  input[type="number"].error{border-color: var(--danger);}
+
+  .calc-actions{display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;}
+  .btn-primary
+  {
+    background: var(--accent); color: #0d1117;
+    border: none; border-radius: 9px; padding: 12px 28px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: opacity .2s;
+  }
+  .btn-primary:hover{opacity: .85;}
+  .btn-secondary
+  {
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 9px; padding: 12px 24px;
+    font-size: 15px; font-weight: 500; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: all .2s;
+  }
+  .btn-secondary:hover{border-color: var(--muted); color: var(--text);}
+
+  .result-box
+  {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px; margin-top: 10px;
+  }
+  .result-box.show{display: block; animation: fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to {opacity:1; transform:translateY(0);}}
+
+  .result-main
+  {
+    display: flex; align-items: center; gap: 24px;
+    flex-wrap: wrap; margin-bottom: 20px;
+  }
+
+  .result-big
+  {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 52px; font-weight: 700;
+    line-height: 1; color: var(--accent);
+  }
+  .result-meta {flex: 1;}
+  .result-meta h4{font-size: 16px; font-weight: 600; margin-bottom: 4px;}
+  .result-meta p{font-size: 13px; color: var(--muted);}
+
+  .result-breakdown
+  {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px; border-top: 1px solid var(--border); padding-top: 20px;
+  }
+  .breakdown-item{text-align: center;}
+  .breakdown-item .bval{font-size: 20px; font-weight: 700; color: var(--accent2);}
+  .breakdown-item .blbl{font-size: 11px; color: var(--muted); margin-top: 2px;}
+
+  .error-msg{color: var(--danger); font-size: 13px; margin-top: 8px; display: none;}
+
+  .merit-section{padding: 60px 24px; max-width: 1060px; margin: 0 auto;}
+  .year-toggle{display: flex; gap: 8px; margin-bottom: 24px;}
+  .year-btn
+  {
+    padding: 7px 20px; border: 1px solid var(--border);
+    border-radius: 8px; background: transparent; color: var(--muted);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: all .2s;
+  }
+  .year-btn.active{background: var(--accent); color: #0d1117; border-color: var(--accent);}
+
+  .merit-table-wrap{overflow-x: auto;}
+  table{width: 100%; border-collapse: collapse; font-size: 13px;}
+  th
+  {
+    background: var(--card); color: var(--muted);
+    font-weight: 600; font-size: 11px; letter-spacing: .05em;
+    text-transform: uppercase; padding: 12px 16px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td
+  {
+    padding: 13px 16px; border-bottom: 1px solid rgba(42,51,71,.5);
+    color: var(--text);
+  }
+  tr:hover td{background: rgba(255,255,255,.02);}
+  .badge
+  {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    padding: 2px 8px; border-radius: 5px;
+    background: rgba(0,201,167,.12); color: var(--accent);
+  }
+
+  .faq-list{display: flex; flex-direction: column; gap: 10px;}
+  .faq-item
+  {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+
+  .faq-q
+  {
+    padding: 16px 20px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-weight: 500; font-size: 14px;
+    user-select: none; transition: color .2s;
+  }
+  .faq-q:hover{color: var(--accent);}
+  .faq-q .chevron{transition: transform .25s; font-size: 12px;}
+  .faq-item.open .faq-q{color: var(--accent);}
+  .faq-item.open .chevron{transform: rotate(180deg);}
+  .faq-a
+  {
+    max-height: 0; overflow: hidden;
+    transition: max-height .3s ease, padding .3s;
+    color: var(--muted); font-size: 14px; padding: 0 20px;
+    line-height: 1.7;
+  }
+  .faq-item.open .faq-a{max-height: 300px; padding: 0 20px 16px;}
+
+  footer
+  {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    text-align: center; padding: 32px 24px;
+    color: var(--muted); font-size: 13px;
+  }
+  footer a{color: var(--accent); text-decoration: none;}
+  footer a:hover{text-decoration: underline;}
+
+  .note {font-size: 12px; color: var(--muted); margin-top: 6px;}
+  .section-divider {border: none; border-top: 1px solid var(--border); margin: 0;}
+
+  @media (max-width: 640px)
+  {
+    nav {padding: 0 16px;}
+    .nav-links a:not(.nav-cta){display: none;}
+    .hero{padding: 56px 16px 48px;}
+    .hero-stats{gap: 24px;}
+    .calc-inner{padding: 40px 16px;}
+    .result-big{font-size: 40px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#"><span>FAST</span>&nbsp;NUCES</a>
+  <div class="nav-links">
+    <a href="#home" class="active">Home</a>
+    <a href="#nat">NAT Calc</a>
+    <a href="#nu">NU Calc</a>
+    <a href="#merit">Merit</a>
+    <a href="#faq">FAQs</a>
+    <a href="https://github.com/SlayerArman/FAST" target="_blank" class="nav-cta">Resources ↗</a>
+  </div>
+</nav>
+
+<section id="home" class="hero">
+  <div class="hero-badge">Admission 2026</div>
+  <h1>FAST NUCES<br /><span>Aggregate Calculator</span></h1>
+  <p>Calculate Your Admission Aggregate & Check Program-Wise Merit in Seconds. Accurate, Fast, No Login Needed.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">5★</div><div class="lbl">User Rating</div></div>
+    <div class="hero-stat"><div class="val">15K+</div><div class="lbl">Visits</div></div>
+    <div class="hero-stat"><div class="val">4K+</div><div class="lbl">Students Helped</div></div>
+  </div>
+
+  <div style="max-width:860px;margin:0 auto;">
+    <div class="card-grid">
+      <div class="card" style="text-align:left;">
+        <div class="card-icon">📐</div>
+        <h3>NAT Marks Calculator</h3>
+        <p>Calculate Aggregate Using NAT/SAT Marks, Matric & FSc Percentages for Computing & Engineering.</p>
+        <a href="#nat" class="card-btn">Calculate →</a>
+      </div>
+      <div class="card" style="text-align:left;">
+        <div class="card-icon">🧮</div>
+        <h3>NU Test Calculator</h3>
+        <p>Compute Your NU Test Score with Negative Marking & Derive Your Final Admission Aggregate.</p>
+        <a href="#nu" class="card-btn">Calculate →</a>
+      </div>
+      <div class="card" style="text-align:left;">
+        <div class="card-icon">🏫</div>
+        <h3>Campus Merit List</h3>
+        <p>Browse Last Year's Closing Merit For Every FAST Campus & Program Side-By-Side.</p>
+        <a href="#merit" class="card-btn">View Merit →</a>
+      </div>
     </div>
+  </div>
+</section>
+
+<hr class="section-divider" />
+
+<div class="calc-wrapper" id="nat">
+  <div class="calc-inner">
+    <div class="calc-header">
+      <h2 class="section-title">NAT / SAT Aggregate Calculator</h2>
+      <p class="section-sub">Enter your test and academic scores below.</p>
+    </div>
+
+    <div class="program-toggle" id="natProgramToggle">
+      <button class="prog-btn active" onclick="setNatProgram('comp')">
+        <div class="prog-label">Computing / Business</div>
+        <div class="prog-formula">NU/NAT 50% · FSc 40% · Matric 10%</div>
+        <div class="prog-degrees">CS · SE · AI · CYS · DS · BBA · BA · AF · FT</div>
+      </button>
+      <button class="prog-btn" onclick="setNatProgram('eng')">
+        <div class="prog-label">Engineering</div>
+        <div class="prog-formula">NU/NAT 33% · FSc 50% · Matric 17%</div>
+        <div class="prog-degrees">CV · EE · CE</div>
+      </button>
+    </div>
+
+    <div class="fields">
+      <div class="field-group">
+        <div class="group-title">Test Score</div>
+        <div>
+          <label for="natMarks">NAT / SAT Marks (out of 100)</label>
+          <input type="number" id="natMarks" placeholder="e.g. 78" min="0" max="100" />
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">Academic Record</div>
+        <div>
+          <label for="natMatric">SSC / O-Level %</label>
+          <input type="number" id="natMatric" placeholder="e.g. 90" min="0" max="100" />
+        </div>
+        <div>
+          <label for="natFsc">HSSC / A-Level %</label>
+          <input type="number" id="natFsc" placeholder="e.g. 85" min="0" max="100" />
+        </div>
+      </div>
+    </div>
+
+    <div class="calc-actions">
+      <button class="btn-primary" onclick="calcNat()">Calculate Aggregate</button>
+      <button class="btn-secondary" onclick="resetNat()">Reset</button>
+    </div>
+    <div class="error-msg" id="natError">Please Fill in All Fields with Values between 0 - 100.</div>
+    <p class="note">Results may Vary by ±0.05 Due to Rounding Differences.</p>
+
+    <div class="result-box" id="natResult">
+      <div class="result-main">
+        <div class="result-big" id="natAgg">—</div>
+        <div class="result-meta">
+          <h4>Your Aggregate</h4>
+          <p>Based on Your Program Type & The FAST NUCES Formula</p>
+        </div>
+      </div>
+      <div class="result-breakdown">
+        <div class="breakdown-item"><div class="bval" id="natWTest">—</div><div class="blbl">Weighted Test</div></div>
+        <div class="breakdown-item"><div class="bval" id="natWFsc">—</div><div class="blbl">Weighted FSc</div></div>
+        <div class="breakdown-item"><div class="bval" id="natWMatric">—</div><div class="blbl">Weighted Matric</div></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <hr class="section-divider" />
 
-/*NU Test Calculator*/
 <div id="nu" style="background:var(--bg);">
-    <div class="calc-inner" style="max-width: 880px; margin: 0 auto; padding: 60px 24px;">
+  <div class="calc-inner" style="max-width:880px;margin:0 auto;padding:60px 24px;">
     <div class="calc-header">
-        <h2 class="section-title">NU Test Marks Calculator</h2>
-        <p class="section-sub">Calculate Your NU Score with Negative Marking, Then Get the Final Aggregate.</p>
+      <h2 class="section-title">NU Test Marks Calculator</h2>
+      <p class="section-sub">Calculate Your NU Test Score with Negative Marking, Then Get the Final Aggregate.</p>
     </div>
 
     <div class="tab-bar" id="nuTabBar">
-        <button class="tab active" onclick="setNuProgram('comp')">Computing</button>
-        <button class="tab" onclick="setNuProgram('eng')">Engineering</button>
-        <button class="tab" onclick="setNuProgram('biz')">Business</button>
+      <button class="tab active" onclick="setNuProgram('comp')">Computing</button>
+      <button class="tab" onclick="setNuProgram('eng')">Engineering</button>
+      <button class="tab" onclick="setNuProgram('biz')">Business</button>
     </div>
 
     <div class="fields" id="nuCompFields">
-        <div class="field-group">
-            <div class="group-title">Advanced Math</div>
-            <div><label>Attempted</label><input type="number" id="amAttempted" placeholder="0-30" min="0" max="30" /></div>
-            <div><label>Correct</label><input type="number" id="amCorrect" placeholder="0-30" min="0" max="30" /></div>
-        </div>
-        <div class="field-group">
-            <div class="group-title">Basic Math</div>
-            <div><label>Attempted</label><input type="number" id="bmAttempted" placeholder="0-20" min="0" max="20" /></div>
-            <div><label>Correcr</label><input type="number" id="bmCorrect" placeholder="0-20" min="0" max="20" /></div>
-        </div>
-         <div class="field-group">
-            <div class="group-title">IQ</div>
-            <div><label>Attempted</label><input type="number" id="iqAttempted" placeholder="0-20" min="0" max="20" /></div>
-            <div><label>Correct</label><input type="number" id="iqCorrect" placeholder="0-20" min="0" max="20" /></div>
-        </div>
-         <div class="field-group">
-            <div class="group-title">English</div>
-            <div><label>Attempted</label><input type="number" id="enAttempted" placeholder="0-20" min="0" max="20" /></div>
-            <div><label>Correct</label><input type="number" id="enCorrect" placeholder="0-20" min="0" max="20" /></div>
-        </div>
-    </div>
-
-    /*Engineering Fields*/
-    <div class="fieds" id="nuEngFields" style="display:none">
-        <div class="field-group">
-            <div class="group-title">Basic Math</div>
-            <div><label>Attemted</label><input type="number" id="ebmAttemted" placeholder="0-20" min="0" max="20" /></div>
-            <div><label>Correct</label><input type="number" id="ebmCorrect" placeholder="0-20" min="0" max="20" /></div>
-        </div>
-        <div class="field-group">
-            <div class="group-title">IQ</div>
-            <div><label>Attemted</label><input type="number" id="eiqAttemted" placeholder="0-20" min="0" max="20" /></div>
-            <div><label>Correct</label><input type="number" id="eiqCorrect" placeholder="0-20" min="0" max="20" /></div>
-        </div>
-        <div class="field-group">
-            <div class="group-title">English</div>
-            <div><label>Attemted</label><input type="number" id="eenAttemted" placeholder="0-30" min="0" max="30" /></div>
-            <div><label>Correct</label><input type="number" id="eenCorrect" placeholder="0-30" min="0" max="30" /></div>
-        </div>
-    </div>
-
-    /*Business fields*/
-    <div class="fields" id="nuBizFields" style="display:none;">
+      <div class="field-group">
+        <div class="group-title">Advanced Math</div>
+        <div><label>Attempted</label><input type="number" id="amAttempted" placeholder="0–50" min="0" max="50" /></div>
+        <div><label>Correct</label><input type="number" id="amCorrect" placeholder="0–50" min="0" max="50" /></div>
+      </div>
+      <div class="field-group">
         <div class="group-title">Basic Math</div>
-            <div><label>Attempted</label><input type="number" id="bbmAttempted" placeholder="0-20" min="0" max="20" /></div>
-            <div><label>Correct</label><input type="number" id="bbmCorrect" placeholder="0-20" min="0" max="20" /></div>
+        <div><label>Attempted</label><input type="number" id="bmAttempted" placeholder="0–20" min="0" max="20" /></div>
+        <div><label>Correct</label><input type="number" id="bmCorrect" placeholder="0–20" min="0" max="20" /></div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">IQ</div>
+        <div><label>Attempted</label><input type="number" id="iqAttempted" placeholder="0–20" min="0" max="20" /></div>
+        <div><label>Correct</label><input type="number" id="iqCorrect" placeholder="0–20" min="0" max="20" /></div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">English</div>
+        <div><label>Attempted</label><input type="number" id="enAttempted" placeholder="0–30" min="0" max="30" /></div>
+        <div><label>Correct</label><input type="number" id="enCorrect" placeholder="0–30" min="0" max="30" /></div>
+      </div>
     </div>
-    <div class="group-title">IQ</div>
-            <div><label>Attempted</label><input type="number" id="biqAttempted" placeholder="0-20" min="0" max="20" /></div>
-            <div><label>Correct</label><input type="number" id="biqCorrect" placeholder="0-20" min="0" max="20" /></div>
-     </div>
-     <div class="group-title">English</div>
-            <div><label>Attempted</label><input type="number" id="benAttempted" placeholder="0-30" min="0" max="30" /></div>
-            <div><label>Correct</label><input type="number" id="benCorrect" placeholder="0-30" min="0" max="30" /></div>
-     </div>
-     <div class="field-group">
-        <div class="group-title">Essay</div>
-        <div><label>Expected Marks(Out of 20)</label><input type="number" id="essayMarks" placeholder="0-20" min="0" max="20" /></div>
-     </div>
-</div>
 
-<div class="fields" style="margin-top:0">
-    <div class="field-group">
+    <div class="fields" id="nuEngFields" style="display:none;">
+        <div class="field-group">
+        <div class="group-title">Advanced Math</div>
+        <div><label>Attempted</label><input type="number" id="amAttempted" placeholder="0–50" min="0" max="50" /></div>
+        <div><label>Correct</label><input type="number" id="amCorrect" placeholder="0–50" min="0" max="50" /></div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">Basic Math</div>
+        <div><label>Attempted</label><input type="number" id="ebmAttempted" placeholder="0–20" min="0" max="20" /></div>
+        <div><label>Correct</label><input type="number" id="ebmCorrect" placeholder="0–20" min="0" max="20" /></div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">IQ</div>
+        <div><label>Attempted</label><input type="number" id="eiqAttempted" placeholder="0–20" min="0" max="20" /></div>
+        <div><label>Correct</label><input type="number" id="eiqCorrect" placeholder="0–20" min="0" max="20" /></div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">English</div>
+        <div><label>Attempted</label><input type="number" id="eenAttempted" placeholder="0–30" min="0" max="30" /></div>
+        <div><label>Correct</label><input type="number" id="eenCorrect" placeholder="0–30" min="0" max="30" /></div>
+      </div>
+    </div>
+
+    <div class="fields" id="nuBizFields" style="display:none;">
+      <div class="field-group">
+        <div class="group-title">Basic Math</div>
+        <div><label>Attempted</label><input type="number" id="bbmAttempted" placeholder="0–50" min="0" max="50" /></div>
+        <div><label>Correct</label><input type="number" id="bbmCorrect" placeholder="0–50" min="0" max="50" /></div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">IQ</div>
+        <div><label>Attempted</label><input type="number" id="biqAttempted" placeholder="0–25" min="0" max="25" /></div>
+        <div><label>Correct</label><input type="number" id="biqCorrect" placeholder="0–25" min="0" max="25" /></div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">English</div>
+        <div><label>Attempted</label><input type="number" id="benAttempted" placeholder="0–10" min="0" max="10" /></div>
+        <div><label>Correct</label><input type="number" id="benCorrect" placeholder="0–10" min="0" max="10" /></div>
+      </div>
+      <div class="field-group">
+        <div class="group-title">Essay</div>
+        <div><label>Expected Marks (out of 15)</label><input type="number" id="essayMarks" placeholder="0–15" min="0" max="15" /></div>
+      </div>
+    </div>
+
+    <div class="fields" style="margin-top:0;">
+      <div class="field-group">
         <div class="group-title">Academic Record</div>
         <div><label for="nuMatric">SSC / O-Level %</label><input type="number" id="nuMatric" placeholder="e.g. 90" min="0" max="100" /></div>
         <div><label for="nuFsc">HSSC / A-Level %</label><input type="number" id="nuFsc" placeholder="e.g. 85" min="0" max="100" /></div>
+      </div>
     </div>
-</div>
-    
-<div class="error-msg" id="nuError">Please Fill in All Fields Correctly.</div>
-<p class="note">Results may VAry by ±0.05 due to Rounding Differences.</p>
 
-<div class="result-box" id="nuResult">
-    <div class="result-main">
-        <div class="result-big" id="nuAgg">-</div>
+    <div class="calc-actions">
+      <button class="btn-primary" onclick="calcNu()">Calculate</button>
+      <button class="btn-secondary" onclick="resetNu()">Reset</button>
+    </div>
+    <div class="error-msg" id="nuError">Please Fill in All Fields Correctly.</div>
+    <p class="note">Results may Vary by ±0.05 Due to Rounding Differences.</p>
+
+    <div class="result-box" id="nuResult">
+      <div class="result-main">
+        <div class="result-big" id="nuAgg">—</div>
         <div class="result-meta">
-            <h4>Final Aggregate</h4>
-            <p>Your NU Test Score & Academin Record Combined</p>
+          <h4>Final Aggregate</h4>
+          <p>Your NU Test Score & Academic Record Combined</p>
         </div>
+      </div>
+      <div class="result-breakdown">
+        <div class="breakdown-item"><div class="bval" id="nuTestScore">—</div><div class="blbl">NU Test Score</div></div>
+        <div class="breakdown-item"><div class="bval" id="nuNegMark">—</div><div class="blbl">Negative Marks</div></div>
+        <div class="breakdown-item"><div class="bval" id="nuWTest">—</div><div class="blbl">Weighted Test</div></div>
+        <div class="breakdown-item"><div class="bval" id="nuWFsc">—</div><div class="blbl">Weighted FSc</div></div>
+        <div class="breakdown-item"><div class="bval" id="nuWMatric">—</div><div class="blbl">Weighted Matric</div></div>
+      </div>
     </div>
-    <div class="result-breakdown">
-        <div class="breakdown-item"><div class="bval" id="nuTestScore">-</div><div class="blbl">Nu Test Score</div></div>
-        <div class="breakdown-item"><div class="bval" id="nuNegMark">-</div><div class="blbl">Negative Marks</div></div>
-        <div class="breakdown-item"><div class="bval" id="nuWTest">-</div><div class="blbl">Weighted Test</div></div>
-        <div class="breakdown-item"><div class="bval" id="nuWFsc">-</div><div class="blbl">Weighted FSc</div></div>
-        <div class="breakdown-item"><div class="bval" id="nuWMatric">-</div><div class="blbl">Weighted Matric</div></div>
-    </div>
-</div>
-</div>
+  </div>
 </div>
 
 <hr class="section-divider" />
 
-/*Merit Table*/
-<div id="merit" style="background:var(--surface); border-top: 1px solid var(--border);">
-    <div class="merit-section">
-        <h2 class="section-title">Closing Merit List 2026</h2>
-        <p class="section-sub">Previous Closing Aggregate Accross FAST Campuses. A Dash (-) Means No Data Reported.</p>
-        <div class="year-toggle">
-            <button class="year-btn active" onclick="setYear(2026)">2026</button>
-            <button class="year-btn" onclick="setYear(2025)">2025</button>
-        </div>
-
-        <div class="merit-table-wrap">
-            <table id="meritTable">
-                <thead>
-                    <tr>
-                        <th>Campus</th>
-                        <th>Program</th>
-                        <th>NU Merit</th>
-                        <th>NAT Merit</th>
-                        <th>SAT Merit</th>
-                    </tr>
-                </thead>
-                <tbody id="meritBody"></tbody>
-            </table>
-        </div>
-        <p class="note" style="margin-top:12px;">Data Based on Reported Responses - May Not be 100% Accurate.<a href="https://slayerarman.github.io/FAST/" target="_blank" style="color:var(--accent)">Source</a>.</p>
+<div id="merit" style="background:var(--surface);border-top:1px solid var(--border);">
+  <div class="merit-section">
+    <h2 class="section-title">Closing Merit List 2025</h2>
+    <p class="section-sub">Previous Closing Aggregates Across FAST Campuses. A Dash (—) Means No Data Reported.</p>
+    <div class="year-toggle">
+      <button class="year-btn active" onclick="setYear(2025)">2025</button>
+      <button class="year-btn" onclick="setYear(2024)">2024</button>
     </div>
+
+    <div class="merit-table-wrap">
+      <table id="meritTable">
+        <thead>
+          <tr>
+            <th>Campus</th>
+            <th>Program</th>
+            <th>NU Merit</th>
+            <th>NAT Merit</th>
+            <th>SAT Merit</th>
+          </tr>
+        </thead>
+        <tbody id="meritBody"></tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px;">Data Based on Reported Responses — May Not be 100% Accurate.<a href="https://www.nu.edu.pk/" target="_blank" style="color:var(--accent)">Source</a>.</p>
+  </div>
 </div>
 
 <hr class="section-divider" />
 
-/*FAQs*/
 <div id="faq" style="background:var(--bg);">
+  <div class="section">
     <h2 class="section-title">Frequently Asked Questions</h2>
-    <p class="section-sub">Common Questions about FAST NUCES Admissions - Last Updated June 2026.</p>
+    <p class="section-sub">Common Questions About FAST NUCES Admissions — Last Updated June 2026.</p>
     <div class="faq-list" id="faqList"></div>
-    </div> 
+  </div>
 </div>
 
 <footer>
-    <p> Made with ❤️ by <a href="https://www.youtube.com/@slayerarman" target="_black">Arman Ahmad</a> &nbsp;·&nbsp; <a href="https://github.com/SlayerArman" target="_blank">GitHub</a> &nbsp;·&nbsp; <a href="https://www.instagram.com/slayerarman67/" target="_blank">Instagram</a></p>
+  <p>Made with ❤️ by <a href="https://www.youtube.com/@slayerarman" target="_blank">Arman Ahmad</a> &nbsp;·&nbsp; <a href="https://github.com/SlayerArman" target="_blank">GitHub</a> &nbsp;·&nbsp; <a href="https://www.instagram.com/slayerarman67/" target="_blank">Instagram</a></p>
+  <p style="margin-top:6px;font-size:12px;">© 2026 FAST NUCES Merit Calculator</p>
 </footer>
 
 <script>
-    let natProgram = 'comp';
-    let nuProgram = 'comp';
+let natProgram = 'comp';
+let nuProgram  = 'comp';
 
-    function setNatProgram(p)
-    {
-        natProgram = p;
-        document.querySelectorAll('#natProgramToggle .prog-btn').forEach((b, i) => {
-            b.classList.toggle('active', (p === 'comp' && i === 0) || (p === 'eng' && i === 1));
-        });
-        resetNat();
+function setNatProgram(p)
+{
+  natProgram = p;
+  document.querySelectorAll('#natProgramToggle .prog-btn').forEach((b, i) => {
+    b.classList.toggle('active', (p === 'comp' && i === 0) || (p === 'eng' && i === 1));
+  });
+  resetNat();
+}
+
+function calcNat()
+{
+  const marks = parseFloat(document.getElementById('natMarks').value);
+  const matric = parseFloat(document.getElementById('natMatric').value);
+  const fsc = parseFloat(document.getElementById('natFsc').value);
+  const err = document.getElementById('natError');
+
+  if (isNaN(marks) || isNaN(matric) || isNaN(fsc) ||
+      marks < 0 || marks > 100 || matric < 0 || matric > 100 || fsc < 0 || fsc > 100) {
+    err.style.display = 'block'; return;
+  }
+  err.style.display = 'none';
+
+  let wTest, wFsc, wMatric;
+  if (natProgram === 'comp') {
+    wTest = marks * 0.50;
+    wFsc = fsc * 0.40;
+    wMatric = matric * 0.10;
+  } else {
+    wTest = marks * 0.33;
+    wFsc = fsc * 0.50;
+    wMatric = matric * 0.17;
+  }
+  const agg = wTest + wFsc + wMatric;
+
+  document.getElementById('natAgg').textContent = agg.toFixed(2);
+  document.getElementById('natWTest').textContent = wTest.toFixed(2);
+  document.getElementById('natWFsc').textContent = wFsc.toFixed(2);
+  document.getElementById('natWMatric').textContent = wMatric.toFixed(2);
+  document.getElementById('natResult').classList.add('show');
+}
+
+function resetNat()
+{
+  ['natMarks','natMatric','natFsc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('natResult').classList.remove('show');
+  document.getElementById('natError').style.display = 'none';
+}
+
+function setNuProgram(p)
+{
+  nuProgram = p;
+  document.querySelectorAll('#nuTabBar .tab').forEach((b, i) => {
+    b.classList.toggle('active', (['comp','eng','biz'])[i] === p);
+  });
+  document.getElementById('nuCompFields').style.display = p === 'comp' ? '' : 'none';
+  document.getElementById('nuEngFields').style.display  = p === 'eng'  ? '' : 'none';
+  document.getElementById('nuBizFields').style.display  = p === 'biz'  ? '' : 'none';
+  resetNu();
+}
+
+function getVal(id){return parseFloat(document.getElementById(id).value);}
+
+function calcNu()
+{
+  const matric = getVal('nuMatric');
+  const fsc = getVal('nuFsc');
+  const err = document.getElementById('nuError');
+
+  if (isNaN(matric) || isNaN(fsc) || matric < 0 || matric > 100 || fsc < 0 || fsc > 100) {
+    err.style.display = 'block'; return;
+  }
+
+  let raw = 0, neg = 0, testScore = 0;
+
+  if (nuProgram === 'comp')
+  {
+    const fields = [
+      {a: getVal('amAttempted'), c: getVal('amCorrect'), total: 30},
+      {a: getVal('bmAttempted'), c: getVal('bmCorrect'), total: 20},
+      {a: getVal('iqAttempted'), c: getVal('iqCorrect'), total: 20},
+      {a: getVal('enAttempted'), c: getVal('enCorrect'), total: 30},
+    ];
+    if(fields.some(f => isNaN(f.a) || isNaN(f.c) || f.c > f.a || f.a > f.total || f.a < 0)){
+      err.style.display = 'block'; return;
     }
+    fields.forEach(f => {
+      raw += f.c;
+      neg += (f.a - f.c) * 0.25;
+    });
+    testScore = Math.max(0, raw - neg);
 
-    function calcNat()
-    {
-        const marks = pareFloat(document.getElementById('natMarks').value);
-        const matric = parseFloat(document.getElementById('natMatric').value);
-        const fsc = parseFloat(document.getElementById('natFsc').value);
-        const err = document.getElementById('natError');
-
-        if (isNaN(marks) || isNaN(matric) ||  isNaN(fsc) || marks < 0 || marks > 100 || matric < 0 || matric > 100 || fsc < 0 || fsc > 100) {
-            err.style.display = 'block'; return;
-        }
-        err.style.display = 'none';
-
-        let wTest, wFsc, wMatric;
-        if(natProgram === 'comp')
-        {
-            wTest = marks * 0.50;
-            wFsc = fsc * 0.40;
-            wMatric = matric * 0.10;
-        } else {
-            wTest = marks * 0.33;
-            wFsc = fsc * 0.50;
-            wMatric = matric * 0.17;
-        }
-        const agg = wTest + wFsc + wMatric;
-
-        document.getElementById('natAgg').textContent = agg.toFixed(2);
-        document.getElementById('natWTest').textContent = wTest.toFixed(2);
-        document.getElementById('natWFsc').textContent = wFsc.toFixed(2);
-        document.getElementById('natWMatric').textContent = wMatric.toFixed(2);
-        document.getElementById('natResult').classList.add('show');
+  } else if(nuProgram === 'eng')
+  {
+    const fields = [
+      {a: getVal('ebmAttempted'), c: getVal('ebmCorrect'), total: 20},
+      {a: getVal('eiqAttempted'), c: getVal('eiqCorrect'), total: 20},
+      {a: getVal('eenAttempted'), c: getVal('eenCorrect'), total: 30},
+    ];
+    if (fields.some(f => isNaN(f.a) || isNaN(f.c) || f.c > f.a || f.a > f.total || f.a < 0)){
+      err.style.display = 'block'; return;
     }
+    fields.forEach(f => {
+      raw += f.c;
+      neg += (f.a - f.c) * 0.25;
+    });
+    testScore = Math.max(0, raw - neg);
 
-    function resetNat()
-    {
-        ['natMarks', 'natMatric', 'natFsc'].forEach(id => document.getElementById(id).value = '');
-        document.getElementById('natResult').classList.remove('show');
-        document.getElementById('natError').style.display = 'none';
+  } else {
+    const fields = [
+      {a: getVal('bbmAttempted'), c: getVal('bbmCorrect'), total: 20},
+      {a: getVal('biqAttempted'), c: getVal('biqCorrect'), total: 20},
+      {a: getVal('benAttempted'), c: getVal('benCorrect'), total: 30},
+    ];
+    const essay = getVal('essayMarks');
+    if(fields.some(f => isNaN(f.a) || isNaN(f.c) || f.c > f.a || f.a > f.total || f.a < 0) || isNaN(essay) || essay < 0 || essay > 20){
+      err.style.display = 'block'; return;
     }
+    fields.forEach(f => {
+      raw += f.c;
+      neg += (f.a - f.c) * 0.25;
+    });
+    testScore = Math.max(0, raw - neg) + essay;
+  }
 
-    /*NU Calc*/
-    
+  err.style.display = 'none';
+
+  let wTest, wFsc, wMatric;
+  if(nuProgram === 'eng') {
+    wTest   = (testScore / 70) * 100 * 0.33;
+    wFsc    = fsc    * 0.50;
+    wMatric = matric * 0.17;
+  } else {
+    wTest   = (testScore / 100) * 100 * 0.50;
+    wFsc    = fsc    * 0.40;
+    wMatric = matric * 0.10;
+  }
+  const agg = wTest + wFsc + wMatric;
+
+  document.getElementById('nuAgg').textContent = agg.toFixed(2);
+  document.getElementById('nuTestScore').textContent = testScore.toFixed(2);
+  document.getElementById('nuNegMark').textContent = neg.toFixed(2);
+  document.getElementById('nuWTest').textContent = wTest.toFixed(2);
+  document.getElementById('nuWFsc').textContent = wFsc.toFixed(2);
+  document.getElementById('nuWMatric').textContent = wMatric.toFixed(2);
+  document.getElementById('nuResult').classList.add('show');
+}
+
+function resetNu()
+{
+  ['amAttempted','amCorrect','bmAttempted','bmCorrect','iqAttempted','iqCorrect','enAttempted','enCorrect',
+   'ebmAttempted','ebmCorrect','eiqAttempted','eiqCorrect','eenAttempted','eenCorrect',
+   'bbmAttempted','bbmCorrect','biqAttempted','biqCorrect','benAttempted','benCorrect','essayMarks',
+   'nuMatric','nuFsc'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('nuResult').classList.remove('show');
+  document.getElementById('nuError').style.display = 'none';
+}
+
+const meritData = {
+  2025: [
+    { campus:'Lahore',    program:'CS',  nu:'83.20', nat:'80.10', sat:'—' },
+    { campus:'Lahore',    program:'SE',  nu:'81.50', nat:'78.90', sat:'—' },
+    { campus:'Lahore',    program:'AI',  nu:'82.00', nat:'79.50', sat:'—' },
+    { campus:'Lahore',    program:'EE',  nu:'80.00', nat:'77.00', sat:'—' },
+    { campus:'Karachi',   program:'CS',  nu:'84.10', nat:'81.30', sat:'82.50' },
+    { campus:'Karachi',   program:'SE',  nu:'82.40', nat:'79.60', sat:'—' },
+    { campus:'Karachi',   program:'BBA', nu:'79.80', nat:'76.50', sat:'—' },
+    { campus:'Islamabad', program:'CS',  nu:'82.80', nat:'80.00', sat:'—' },
+    { campus:'Islamabad', program:'SE',  nu:'80.90', nat:'78.20', sat:'—' },
+    { campus:'Islamabad', program:'CE',  nu:'79.50', nat:'76.80', sat:'—' },
+    { campus:'Peshawar',  program:'CS',  nu:'80.10', nat:'77.40', sat:'—' },
+    { campus:'Peshawar',  program:'SE',  nu:'78.60', nat:'75.90', sat:'—' },
+    { campus:'CFD',       program:'CS',  nu:'78.20', nat:'75.10', sat:'—' },
+    { campus:'CFD',       program:'SE',  nu:'76.50', nat:'73.80', sat:'—' },
+  ],
+  2024: [
+    { campus:'Lahore',    program:'CS',  nu:'82.50', nat:'79.30', sat:'—' },
+    { campus:'Lahore',    program:'SE',  nu:'80.80', nat:'78.10', sat:'—' },
+    { campus:'Lahore',    program:'AI',  nu:'81.20', nat:'78.90', sat:'—' },
+    { campus:'Lahore',    program:'EE',  nu:'79.30', nat:'76.20', sat:'—' },
+    { campus:'Karachi',   program:'CS',  nu:'83.40', nat:'80.60', sat:'81.80' },
+    { campus:'Karachi',   program:'SE',  nu:'81.70', nat:'78.90', sat:'—' },
+    { campus:'Karachi',   program:'BBA', nu:'78.90', nat:'75.70', sat:'—' },
+    { campus:'Islamabad', program:'CS',  nu:'81.90', nat:'79.20', sat:'—' },
+    { campus:'Islamabad', program:'SE',  nu:'80.10', nat:'77.50', sat:'—' },
+    { campus:'Islamabad', program:'CE',  nu:'78.70', nat:'76.00', sat:'—' },
+    { campus:'Peshawar',  program:'CS',  nu:'79.20', nat:'76.60', sat:'—' },
+    { campus:'Peshawar',  program:'SE',  nu:'77.80', nat:'75.10', sat:'—' },
+    { campus:'CFD',       program:'CS',  nu:'77.40', nat:'74.30', sat:'—' },
+    { campus:'CFD',       program:'SE',  nu:'75.60', nat:'72.90', sat:'—' },
+  ],
+};
+
+function setYear(y)
+{
+  document.querySelectorAll('.year-btn').forEach(b => b.classList.toggle('active', parseInt(b.textContent) === y));
+  const tbody = document.getElementById('meritBody');
+  tbody.innerHTML = meritData[y].map(r => `
+    <tr>
+      <td>${r.campus}</td>
+      <td><span class="badge">${r.program}</span></td>
+      <td>${r.nu}</td>
+      <td>${r.nat}</td>
+      <td>${r.sat}</td>
+    </tr>`).join('');
+}
+setYear(2025);
+
+const faqs = [
+  { q: 'What is the FAST NUCES admission test?', a: 'FAST NUCES conducts it\'s own admission test (NU Test) in addition to accepting NAT and SAT scores. The NU test consists of sections on Math, IQ, and English, with negative marking of 0.25 per wrong answer.'},
+  { q: 'What weightage formula does FAST NUCES use?', a: 'For Computing and Business programs: NU/NAT 50% + FSc 40% + Matric 10%. For Engineering programs: NU/NAT 33% + FSc 50% + Matric 17%.' },
+  { q: 'How does negative marking work in the NU test?', a: 'For each incorrect answer, 0.25 marks are deducted. Unattempted questions carry no penalty. The formula is: Score = Correct − (Wrong × 0.25).' },
+  { q: 'Can I use SAT instead of NU or NAT test?', a: 'Yes, FAST NUCES accepts SAT scores from certain campuses. Check your target campus\'s admission page for SAT eligibility requirements.' },
+  { q: 'When does FAST NUCES admission open?', a: 'Typically, FAST NUCES opens admissions in April–May for Fall semester. Keep an eye on the official FAST NUCES website (nu.edu.pk) for exact dates.' },
+  { q: 'Is there a gap year policy?', a: 'FAST NUCES generally does not allow gap years; however, students who have taken the NU test in the same admission cycle are eligible. Specific policies may differ by campus — contact your campus admissions office for confirmation.'},
+];
+
+document.getElementById('faqList').innerHTML = faqs.map((f, i) => `
+  <div class="faq-item" id="faq${i}">
+    <div class="faq-q" onclick="toggleFaq(${i})">
+      <span>${f.q}</span>
+      <span class="chevron">▾</span>
+    </div>
+    <div class="faq-a">${f.a}</div>
+  </div>`).join('');
+
+function toggleFaq(i)
+{
+  const item = document.getElementById('faq' + i);
+  item.classList.toggle('open');
+}
+
+const sections = ['home','nat','nu','merit','faq'];
+window.addEventListener('scroll', () => {
+  const pos = window.scrollY + 100;
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(pos >= el.offsetTop && pos < el.offsetTop + el.offsetHeight) {
+      document.querySelectorAll('.nav-links a[href="#' + id + '"]').forEach(a => a.classList.add('active'));
+    } else {
+      document.querySelectorAll('.nav-links a[href="#' + id + '"]').forEach(a => a.classList.remove('active'));
+    }
+  });
+});
 </script>
-    </body>
+</body>
 </html>
